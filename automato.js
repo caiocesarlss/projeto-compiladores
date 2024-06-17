@@ -1,41 +1,37 @@
-const cadeias = ["aabb", "abc", "bbaa", "aacc", "abab", "aabbccc", "adbf", "aaccd", ""];
+//const cadeias = ["aabb", "abc", "bbaa", "aacc", "abab", "aabbccc", "adbf", "aaccd", ""];
 const q0 = "q1";
 const qF = ["q4", "q7"];
 let estadoAtual = q0;
 let pilha;
-let cadeiaAux;
+let entrada;
+let simbolosEntrada;
 let ehAceita = false;
 
-function processarCadeia(cadeia) {
+function processarEntrada(entrada) {
     estadoAtual = q0;
-    cadeiaAux = cadeia.split("");
+    simbolosEntrada = entrada.split("");
     pilha = [];
 
-    for (let i = 0; i <= cadeia.length; i++) {
-        /*console.log("Estado atual: " + estadoAtual);
-        console.log("Cadeia de entrada: " + cadeiaAux.join(""));
-        console.log("Conteúdo da pilha: " + pilha);
-        console.log("------------------------------------------------");*/
-
+    for (let i = 0; i <= entrada.length; i++) {
         if (estadoAtual === q0 && pilha.length === 0) {
             pilha.push("$");
             estadoAtual = "q2";
         }
 
         if (estadoAtual === "q2") {
-            if (cadeia[i] === "a") {
-                cadeiaAux.shift();
+            if (entrada[i] === "a") {
+                simbolosEntrada.shift();
                 pilha.push("a");
-            } else if (cadeia[i] === "c") {
+            } else if (entrada[0] === "b" || (entrada[i] === "c" && i > 0)) {
                 estadoAtual = "q5";
-            } else {
+            } else if (entrada[0] === "c" || entrada.length === 0 || (entrada[i] === "b" && i > 0)) {
                 estadoAtual = "q3";
             }
         }
 
         if (estadoAtual === "q3") {
-            if (cadeia[i] === "b" && pilha[pilha.length - 1] !== "$") {
-                cadeiaAux.shift();
+            if (entrada[i] === "b" && pilha[pilha.length - 1] !== "$") {
+                simbolosEntrada.shift();
                 pilha.pop();
             } else {
                 pilha.pop();
@@ -44,39 +40,44 @@ function processarCadeia(cadeia) {
         }
 
         if (estadoAtual === "q4") {
-            if (cadeia[i] === "c") {
-                cadeiaAux.shift();
+            if (entrada[i] === "c") {
+                simbolosEntrada.shift();
             }
         }
 
         if (estadoAtual === "q5") {
-            if (cadeia[i] === "b") {
-                cadeiaAux.shift();
+            if (entrada[i] === "b") {
+                simbolosEntrada.shift();
             } else {
                 estadoAtual = "q6";
             }
         }
 
         if (estadoAtual === "q6") {
-            if (cadeia[i] === "c" && pilha[pilha.length - 1] !== "$") {
-                cadeiaAux.shift();
+            if (entrada[i] === "c" && pilha[pilha.length - 1] !== "$") {
+                simbolosEntrada.shift();
                 pilha.pop();
             } else {
                 pilha.pop();
                 estadoAtual = "q7";
             }
         }
-        /*console.log("Estado atual: " + estadoAtual);
-        console.log("Cadeia de entrada: " + cadeiaAux.join(""));
-        console.log("Conteúdo da pilha: " + pilha);
-        console.log("------------------------------------------------");*/
     }
 
-    return qF.includes(estadoAtual) && cadeiaAux.length === 0 && pilha.length === 0;
+    return qF.includes(estadoAtual) && simbolosEntrada.length === 0 && pilha.length === 0;
 }
 
-for (let i = 0; i < cadeias.length; i++) {
+entrada = prompt("Digite uma cadeia de entrada: ");
+ehAceita = processarEntrada(entrada);
+
+if (ehAceita) {
+    alert("A entrada {" + entrada + "} é aceita pelo autômato");
+    
+} else {
+    alert("A entrada {" + entrada + "} não é aceita pelo autômato");
+}
+/*for (let i = 0; i < cadeias.length; i++) {
     ehAceita = processarCadeia(cadeias[i]);
 
     console.log("A cadeia {" + cadeias[i] + "} é aceita pelo autômato? " + ehAceita);
-}
+}*/
